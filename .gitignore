@@ -1,0 +1,6 @@
+.DS_Store
+__pycache__
+.idea
+.ipynb_checkpoints
+
+eclipse-mosaic-22.0/logs

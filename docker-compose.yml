@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  connecticity:
+    image: "ide3a/cid-mobility-workshop:latest"
+    volumes:
+      - ./view:/view
+    ports:
+      - "8888:8888"
+    environment:
+      JUPYTER_ENABLE_LAB: "yes"
+      JUPYTER_TOKEN: "ide3a"
+    entrypoint: sh -c 'jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root'
