@@ -1,0 +1,21 @@
+2022-06-15 10:58:48,749 INFO  ROOT - Running Eclipse MOSAIC 22.0 on Java JRE v17.0.2 (Eclipse Adoptium)
+2022-06-15 10:58:48,839 INFO  MosaicStarter - Federate sumo: No port given. Using free port: 52321
+2022-06-15 10:58:48,848 INFO  FederationManagement - Start federation with id 'Barnim'
+2022-06-15 10:58:48,848 INFO  FederationManagement - Add ambassador/federate with id 'application'
+2022-06-15 10:58:48,849 INFO  FederationManagement - Add ambassador/federate with id 'environment'
+2022-06-15 10:58:48,849 INFO  FederationManagement - Add ambassador/federate with id 'mapping'
+2022-06-15 10:58:48,849 INFO  FederationManagement - Add ambassador/federate with id 'cell'
+2022-06-15 10:58:48,850 INFO  FederationManagement - Add ambassador/federate with id 'sns'
+2022-06-15 10:58:48,850 INFO  FederationManagement - Add ambassador/federate with id 'sumo'
+2022-06-15 10:58:48,851 INFO  FederationManagement - Deploying federate 'sumo' locally in .\tmp\sumo
+2022-06-15 10:58:48,864 INFO  FederationManagement - Starting federate 'sumo' locally in .\tmp\sumo
+2022-06-15 10:58:48,864 INFO  FederationManagement - Add ambassador/federate with id 'output'
+2022-06-15 10:58:48,865 INFO  OutputAmbassador - Initialize configuration of OutputAmbassador
+2022-06-15 10:58:56,665 INFO  OutputAmbassador - Registered output generator 'websocket' for messages [RsuRegistration, VehicleRegistration, VehicleUpdates, V2xMessageReception, V2xMessageTransmission]. Update interval=1
+2022-06-15 10:58:56,665 INFO  OutputAmbassador - Registered output generator 'fileoutput' for messages [LanePropertyChange, TrafficLightRegistration, TrafficDetectorUpdates, AdHocCommunicationConfiguration, VehicleRegistration, VehicleSpeedChange, VehicleUpdates, TrafficSignRegistration, ServerRegistration, CellularCommunicationConfiguration, V2xMessageTransmission, V2xMessageReception]. Update interval=1
+2022-06-15 10:59:09,805 INFO  SequentialTimeManagement - Simulation ended after 1000s of 1000s (100%)
+2022-06-15 10:59:09,805 INFO  SequentialTimeManagement - Started: 2022-06-15 10:58:57
+2022-06-15 10:59:09,805 INFO  SequentialTimeManagement - Ended: 2022-06-15 10:59:09
+2022-06-15 10:59:09,806 INFO  SequentialTimeManagement - Duration: 00h 00m 12.433s (RTF: 80.00)
+2022-06-15 10:59:09,806 INFO  SequentialTimeManagement - 
+2022-06-15 10:59:09,806 INFO  SequentialTimeManagement - Simulation finished: 101

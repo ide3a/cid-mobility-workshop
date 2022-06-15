@@ -1,0 +1,131 @@
+2022-06-15 10:58:57,171 INFO  CellAmbassador - Start Cell
+2022-06-15 10:58:57,204 INFO  CellAmbassador - Using network config:
+2022-06-15 10:58:57,204 INFO  CellAmbassador - org.eclipse.mosaic.fed.cell.config.model.CNetworkProperties@668a32a4[id=globalNetwork,uplink.delay=[delayType: ConstantDelay, delay: 100000000],uplink.capacity=28000000,downlink.unicast.delay=[delayType: ConstantDelay, delay: 100000000],downlink.multicast.delay=[delayType: ConstantDelay, delay: 100000000],downlink.multicast.usableCapacity=0.6,downlink.capacity=42200000]
+2022-06-15 10:58:57,216 INFO  CellAmbassador - Using region config:
+2022-06-15 10:58:57,216 INFO  CellAmbassador - 
+2022-06-15 10:58:57,225 INFO  ChainManager - Initialize ChainManager
+2022-06-15 10:58:57,226 INFO  ChainManager - Adding Module Upstream
+2022-06-15 10:58:57,226 INFO  ChainManager - Adding Module Geocaster
+2022-06-15 10:58:57,226 INFO  ChainManager - Adding Module Downstream
+2022-06-15 10:58:57,226 INFO  CellAmbassador - Finished Initialization, waiting for Interactions...
+2022-06-15 10:58:59,130 INFO  CellAmbassador - Enabled (Configured) Cell Communication for entity=server_0, t=0.000,000,000 s with capacity in downlink=10000000000 and uplink=10000000000
+2022-06-15 10:58:59,155 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_0, t=6.000,000,000 s
+2022-06-15 10:58:59,225 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_4, t=14.000,000,000 s
+2022-06-15 10:58:59,277 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_8, t=22.000,000,000 s
+2022-06-15 10:58:59,304 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_10, t=26.000,000,000 s
+2022-06-15 10:58:59,342 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_14, t=34.000,000,000 s
+2022-06-15 10:58:59,375 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_18, t=42.000,000,000 s
+2022-06-15 10:58:59,394 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_20, t=46.000,000,000 s
+2022-06-15 10:58:59,429 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_24, t=54.000,000,000 s
+2022-06-15 10:58:59,459 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_28, t=62.000,000,000 s
+2022-06-15 10:58:59,477 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_30, t=66.000,000,000 s
+2022-06-15 10:58:59,510 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_34, t=74.000,000,000 s
+2022-06-15 10:58:59,545 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_38, t=82.000,000,000 s
+2022-06-15 10:58:59,636 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_40, t=86.000,000,000 s
+2022-06-15 10:58:59,704 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_44, t=94.000,000,000 s
+2022-06-15 10:58:59,779 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_48, t=102.000,000,000 s
+2022-06-15 10:58:59,824 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_50, t=106.000,000,000 s
+2022-06-15 10:58:59,913 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_54, t=114.000,000,000 s
+2022-06-15 10:59:00,018 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_58, t=122.000,000,000 s
+2022-06-15 10:59:00,081 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_60, t=126.000,000,000 s
+2022-06-15 10:59:00,189 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_64, t=134.000,000,000 s
+2022-06-15 10:59:00,285 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_68, t=142.000,000,000 s
+2022-06-15 10:59:00,337 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_70, t=146.000,000,000 s
+2022-06-15 10:59:00,438 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_74, t=154.000,000,000 s
+2022-06-15 10:59:00,542 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_78, t=162.000,000,000 s
+2022-06-15 10:59:00,601 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_80, t=166.000,000,000 s
+2022-06-15 10:59:00,716 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_84, t=174.000,000,000 s
+2022-06-15 10:59:00,830 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_88, t=182.000,000,000 s
+2022-06-15 10:59:00,889 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_90, t=186.000,000,000 s
+2022-06-15 10:59:01,000 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_94, t=194.000,000,000 s
+2022-06-15 10:59:01,115 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_98, t=202.000,000,000 s
+2022-06-15 10:59:01,175 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_100, t=206.000,000,000 s
+2022-06-15 10:59:01,298 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_104, t=214.000,000,000 s
+2022-06-15 10:59:01,420 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_108, t=222.000,000,000 s
+2022-06-15 10:59:01,486 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_110, t=226.000,000,000 s
+2022-06-15 10:59:01,617 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_114, t=234.000,000,000 s
+2022-06-15 10:59:01,754 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_118, t=242.000,000,000 s
+2022-06-15 10:59:01,824 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_120, t=246.000,000,000 s
+2022-06-15 10:59:01,954 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_124, t=254.000,000,000 s
+2022-06-15 10:59:02,094 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_128, t=262.000,000,000 s
+2022-06-15 10:59:02,171 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_130, t=266.000,000,000 s
+2022-06-15 10:59:02,312 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_134, t=274.000,000,000 s
+2022-06-15 10:59:02,461 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_138, t=282.000,000,000 s
+2022-06-15 10:59:02,535 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_140, t=286.000,000,000 s
+2022-06-15 10:59:02,675 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_144, t=294.000,000,000 s
+2022-06-15 10:59:02,811 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_148, t=302.000,000,000 s
+2022-06-15 10:59:02,871 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_150, t=306.000,000,000 s
+2022-06-15 10:59:02,986 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_154, t=314.000,000,000 s
+2022-06-15 10:59:03,078 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_158, t=322.000,000,000 s
+2022-06-15 10:59:03,119 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_160, t=326.000,000,000 s
+2022-06-15 10:59:03,184 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_164, t=334.000,000,000 s
+2022-06-15 10:59:03,248 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_168, t=342.000,000,000 s
+2022-06-15 10:59:03,280 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_170, t=346.000,000,000 s
+2022-06-15 10:59:03,342 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_174, t=354.000,000,000 s
+2022-06-15 10:59:03,407 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_178, t=362.000,000,000 s
+2022-06-15 10:59:03,441 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_180, t=366.000,000,000 s
+2022-06-15 10:59:03,459 INFO  CellAmbassador - Removed VEH (id=veh_0) from simulation, t=368.000,000,000 s
+2022-06-15 10:59:03,482 INFO  CellAmbassador - Removed VEH (id=veh_4) from simulation, t=371.000,000,000 s
+2022-06-15 10:59:03,498 INFO  CellAmbassador - Removed VEH (id=veh_8) from simulation, t=373.000,000,000 s
+2022-06-15 10:59:03,507 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_184, t=374.000,000,000 s
+2022-06-15 10:59:03,516 INFO  CellAmbassador - Removed VEH (id=veh_10) from simulation, t=375.000,000,000 s
+2022-06-15 10:59:03,540 INFO  CellAmbassador - Removed VEH (id=veh_14) from simulation, t=378.000,000,000 s
+2022-06-15 10:59:03,617 INFO  CellAmbassador - Removed VEH (id=veh_18) from simulation, t=381.000,000,000 s
+2022-06-15 10:59:03,635 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_188, t=382.000,000,000 s
+2022-06-15 10:59:03,652 INFO  CellAmbassador - Removed VEH (id=veh_20) from simulation, t=383.000,000,000 s
+2022-06-15 10:59:03,706 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_190, t=386.000,000,000 s
+2022-06-15 10:59:03,756 INFO  CellAmbassador - Removed VEH (id=veh_24) from simulation, t=389.000,000,000 s
+2022-06-15 10:59:03,854 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_194, t=394.000,000,000 s
+2022-06-15 10:59:04,031 INFO  CellAmbassador - Enabled (Configured) Cell Communication for vehicle=veh_198, t=402.000,000,000 s
+2022-06-15 10:59:05,248 INFO  CellAmbassador - Removed VEH (id=veh_28) from simulation, t=447.000,000,000 s
+2022-06-15 10:59:05,401 INFO  CellAmbassador - Removed VEH (id=veh_30) from simulation, t=453.000,000,000 s
+2022-06-15 10:59:05,632 INFO  CellAmbassador - Removed VEH (id=veh_34) from simulation, t=462.000,000,000 s
+2022-06-15 10:59:06,485 INFO  CellAmbassador - Removed VEH (id=veh_38) from simulation, t=497.000,000,000 s
+2022-06-15 10:59:06,599 INFO  CellAmbassador - Removed VEH (id=veh_40) from simulation, t=502.000,000,000 s
+2022-06-15 10:59:06,761 INFO  CellAmbassador - Removed VEH (id=veh_44) from simulation, t=509.000,000,000 s
+2022-06-15 10:59:07,339 INFO  CellAmbassador - Removed VEH (id=veh_48) from simulation, t=535.000,000,000 s
+2022-06-15 10:59:07,447 INFO  CellAmbassador - Removed VEH (id=veh_50) from simulation, t=540.000,000,000 s
+2022-06-15 10:59:07,614 INFO  CellAmbassador - Removed VEH (id=veh_54) from simulation, t=548.000,000,000 s
+2022-06-15 10:59:08,143 INFO  CellAmbassador - Removed VEH (id=veh_58) from simulation, t=574.000,000,000 s
+2022-06-15 10:59:08,242 INFO  CellAmbassador - Removed VEH (id=veh_60) from simulation, t=579.000,000,000 s
+2022-06-15 10:59:08,377 INFO  CellAmbassador - Removed VEH (id=veh_64) from simulation, t=587.000,000,000 s
+2022-06-15 10:59:08,477 INFO  CellAmbassador - Removed VEH (id=veh_68) from simulation, t=594.000,000,000 s
+2022-06-15 10:59:08,554 INFO  CellAmbassador - Removed VEH (id=veh_70) from simulation, t=600.000,000,000 s
+2022-06-15 10:59:08,769 INFO  CellAmbassador - Removed VEH (id=veh_74) from simulation, t=626.000,000,000 s
+2022-06-15 10:59:08,869 INFO  CellAmbassador - Removed VEH (id=veh_78) from simulation, t=651.000,000,000 s
+2022-06-15 10:59:08,892 INFO  CellAmbassador - Removed VEH (id=veh_80) from simulation, t=657.000,000,000 s
+2022-06-15 10:59:08,919 INFO  CellAmbassador - Removed VEH (id=veh_84) from simulation, t=664.000,000,000 s
+2022-06-15 10:59:08,946 INFO  CellAmbassador - Removed VEH (id=veh_88) from simulation, t=671.000,000,000 s
+2022-06-15 10:59:08,969 INFO  CellAmbassador - Removed VEH (id=veh_90) from simulation, t=677.000,000,000 s
+2022-06-15 10:59:09,155 INFO  CellAmbassador - Removed VEH (id=veh_94) from simulation, t=733.000,000,000 s
+2022-06-15 10:59:09,212 INFO  CellAmbassador - Removed VEH (id=veh_98) from simulation, t=751.000,000,000 s
+2022-06-15 10:59:09,312 INFO  CellAmbassador - Removed VEH (id=veh_100) from simulation, t=790.000,000,000 s
+2022-06-15 10:59:09,339 INFO  CellAmbassador - Removed VEH (id=veh_104) from simulation, t=802.000,000,000 s
+2022-06-15 10:59:09,368 INFO  CellAmbassador - Removed VEH (id=veh_108) from simulation, t=815.000,000,000 s
+2022-06-15 10:59:09,414 INFO  CellAmbassador - Removed VEH (id=veh_110) from simulation, t=836.000,000,000 s
+2022-06-15 10:59:09,431 INFO  CellAmbassador - Removed VEH (id=veh_114) from simulation, t=844.000,000,000 s
+2022-06-15 10:59:09,450 INFO  CellAmbassador - Removed VEH (id=veh_118) from simulation, t=852.000,000,000 s
+2022-06-15 10:59:09,466 INFO  CellAmbassador - Removed VEH (id=veh_120) from simulation, t=858.000,000,000 s
+2022-06-15 10:59:09,484 INFO  CellAmbassador - Removed VEH (id=veh_124) from simulation, t=865.000,000,000 s
+2022-06-15 10:59:09,546 INFO  CellAmbassador - Removed VEH (id=veh_128) from simulation, t=895.000,000,000 s
+2022-06-15 10:59:09,551 INFO  CellAmbassador - Removed VEH (id=veh_130) from simulation, t=898.000,000,000 s
+2022-06-15 10:59:09,580 INFO  CellAmbassador - Removed VEH (id=veh_134) from simulation, t=919.000,000,000 s
+2022-06-15 10:59:09,583 INFO  CellAmbassador - Removed VEH (id=veh_138) from simulation, t=921.000,000,000 s
+2022-06-15 10:59:09,587 INFO  CellAmbassador - Removed VEH (id=veh_140) from simulation, t=924.000,000,000 s
+2022-06-15 10:59:09,589 INFO  CellAmbassador - Removed VEH (id=veh_144) from simulation, t=926.000,000,000 s
+2022-06-15 10:59:09,593 INFO  CellAmbassador - Removed VEH (id=veh_148) from simulation, t=929.000,000,000 s
+2022-06-15 10:59:09,595 INFO  CellAmbassador - Removed VEH (id=veh_150) from simulation, t=931.000,000,000 s
+2022-06-15 10:59:09,598 INFO  CellAmbassador - Removed VEH (id=veh_154) from simulation, t=934.000,000,000 s
+2022-06-15 10:59:09,602 INFO  CellAmbassador - Removed VEH (id=veh_158) from simulation, t=937.000,000,000 s
+2022-06-15 10:59:09,606 INFO  CellAmbassador - Removed VEH (id=veh_160) from simulation, t=940.000,000,000 s
+2022-06-15 10:59:09,608 INFO  CellAmbassador - Removed VEH (id=veh_164) from simulation, t=942.000,000,000 s
+2022-06-15 10:59:09,610 INFO  CellAmbassador - Removed VEH (id=veh_168) from simulation, t=944.000,000,000 s
+2022-06-15 10:59:09,614 INFO  CellAmbassador - Removed VEH (id=veh_170) from simulation, t=947.000,000,000 s
+2022-06-15 10:59:09,632 INFO  CellAmbassador - Removed VEH (id=veh_174) from simulation, t=965.000,000,000 s
+2022-06-15 10:59:09,636 INFO  CellAmbassador - Removed VEH (id=veh_178) from simulation, t=970.000,000,000 s
+2022-06-15 10:59:09,654 INFO  CellAmbassador - Removed VEH (id=veh_180) from simulation, t=993.000,000,000 s
+2022-06-15 10:59:09,659 INFO  CellAmbassador - Removed VEH (id=veh_184) from simulation, t=1000.000,000,000 s
+2022-06-15 10:59:09,804 INFO  CellAmbassador - FinishSimulation
+2022-06-15 10:59:09,804 INFO  ChainManager - [Upstream] Processed messages: 500
+2022-06-15 10:59:09,804 INFO  ChainManager - [Geocaster] Processed messages: 500
+2022-06-15 10:59:09,804 INFO  ChainManager - [Downstream] Processed messages: 14778

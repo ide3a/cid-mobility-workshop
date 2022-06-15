@@ -11,6 +11,7 @@ import glom
 import pyproj
 
 from typing import Any
+from IPython.display import display, HTML
 
 
 try:
@@ -33,24 +34,45 @@ class Mosaic:
     """
     def __init__(self,
                  mosaic_path: str,
-                 sim_name: str = 'Barnim') -> None:
+                 sim_name: str = 'Barnim',
+                 sim_speed: int = 100) -> None:
         self.sim_name = sim_name
+        self.sim_speed = sim_speed
         self.mosaic_path = mosaic_path
         self.set_simulation_result()
+
+
 
     def run_simulation(self, visualize=True) -> None:
         """Run the selected simulation and record logs
         """
-        extension = './mosaic.sh' if os.name == 'posix' else 'mosaic.bat'
+        #print(f'Mosaic path is {self.mosaic_path}')
+        extension = 'mosaic.sh' if os.name == 'posix' else 'mosaic.bat'
         shell = False if os.name == 'posix' else True
         command = [extension, '-s', self.sim_name]
         if visualize:
             command.append('-v')
+        command.append('-b') 
+        command.append(str(self.sim_speed))   
         print("Running: " + " ".join(command))
+                
+        #print(f'command: {command}')
+        '''
+        try:
+            output =subprocess.check_output(command,
+                                        stderr=subprocess.STDOUT,
+                                        cwd=self.mosaic_path,
+                                        shell=shell)
+        except subprocess.CalledProcessError as e:
+            print("Error", e.output)
+  
+        
+        '''
         output = subprocess.check_output(command,
                                          stderr=subprocess.STDOUT,
                                          cwd=self.mosaic_path,
                                          shell=shell)
+        
         print(output.decode('ascii'))
         self.set_simulation_result()
 
@@ -66,6 +88,7 @@ class Mosaic:
             the simulation, 1 is the second most recent, by default 0
         """
         log_path = os.path.join(self.mosaic_path, 'logs')
+        print(f'The path for the logs: {log_path}')
         try:
             dirs = sorted([f.name for f in os.scandir(log_path) if f.is_dir()],
                           reverse=True)
@@ -73,9 +96,13 @@ class Mosaic:
             print("Warning: Could not load any existing simulation results.")
             return
 
-        self.sim_select = os.path.join(log_path, dirs[idx])
-        latest = "latest " if idx == 0 else ""
-        print(f"Loading {latest}simulation result '{dirs[idx]}'")
+        if not len(dirs)==0:
+            print(f"Log List size is {len(dirs)}")
+            self.sim_select = os.path.join(log_path, dirs[idx])
+            latest = "latest " if idx == 0 else ""
+            print(f"Loading {latest}simulation result '{dirs[idx]}'")
+        else:
+            print("Warning: Could not load any existing simulation results.")
 
         output_root = self._get_output_config()
 
@@ -102,6 +129,11 @@ class Mosaic:
         pd.DataFrame
             Filtered DataFrame
         """
+        '''
+        loop = 1
+        for kw in kwargs: 
+            print(f'{loop}: {kwargs[loop]}')
+        '''
         assert 'Event' in kwargs, 'Must specify an event name'
         assert 'select' in kwargs, 'Either "all" or list of str'
         if kwargs['select'] == 'all':
@@ -132,6 +164,18 @@ class Mosaic:
 
         return filtered_df
 
+    def _get_log_file(self, log_name) -> pd.DataFrame:
+        log_data  = open(os.path.join(self.sim_select + log_name), 'r')
+        result={}
+        i=0
+        for line in log_data:
+            columns = line.split(' ')
+            result[i] = columns
+            i+=1    
+        j=json.dumps(result)
+        df= pd.read_json(j,orient='index') 
+        return df
+
     def _get_output_csv(self, col_names) -> pd.DataFrame:
         """Getter function for the output.csv file, which holds the log data of
         the indexed simulation.
@@ -144,7 +188,7 @@ class Mosaic:
         return pd.read_csv(os.path.join(self.sim_select + '/output.csv'),
                            sep=';',
                            header=None,
-                           names=col_names)
+                           names=col_names,on_bad_lines='skip', engine ='python')
 
     def _get_output_config(self):
         xml_path = os.path.join(self.mosaic_path,
@@ -156,243 +200,8 @@ class Mosaic:
         tree = etree.parse(xml_path)
         return tree.getroot()
 
-    def df2np(self, df: pd.DataFrame) -> np.array:
-        """Convert DataFrame to Numpy array
-
-        Parameters
-        ----------
-        df : pd.DataFrame
-            Input DataFrame
-
-        Returns
-        -------
-        np.array
-            np.asfarray(df1)
-        """
-        return np.asfarray(df)
-
-    def retrieve_federate(self, federate: str, idx=None) -> str:
-        """Retrieves the selected federate and initializes object attribute for
-        further actions
-
-        Parameters
-        ----------
-        federate : str
-            Federate name, can be 'scenario' or any of the other federates,
-            i.e. 'application', 'sns', 'cell', etc.
-        idx : int, optional
-            Index of the federate within a federate folder, if idx=None, no
-            federate is selected and available options are displayed
-
-        Returns
-        -------
-        str
-            Full path of the federate json
-        """
-
-        if federate == 'scenario':
-            path_to_fedjson = os.path.join(self.mosaic_path,
-                                           'scenarios',
-                                           self.sim_name,
-                                           'scenario_config.json')
-            self.fed_path = path_to_fedjson
-            foo = open(path_to_fedjson)
-            self.fed_name = 'scenario_config.json'
-            self.current_fed_setting = json.load(foo)
-            return path_to_fedjson
-
-        else:
-            path_to_json = os.path.join(self.mosaic_path,
-                                        'scenarios',
-                                        self.sim_name,
-                                        federate)
-
-            json_files = sorted([pos_json for pos_json
-                                 in os.listdir(path_to_json)
-                                 if pos_json.endswith('.json')])
-
-            if idx is None:
-                print(json_files)
-                return json_files
-            else:
-                assert isinstance(idx, int)
-                path_to_fedjson = os.path.join(path_to_json, json_files[idx])
-                self.fed_path = path_to_fedjson
-                foo = open(path_to_fedjson)
-                self.fed_name = json_files[idx]
-                self.current_fed_setting = json.load(foo)
-                return path_to_fedjson
-
-    def set_federate_value(self, tree: str, value: str) -> None:
-        """Sets the selected federate value in the tree and dumps the new
-        federate configuration into JSON
-
-        Parameters
-        ----------
-        tree : str
-            dict tree to navigate to the federate value to be changed, i.e.
-            'globalNetwork.uplink.delay.delay'
-        value : str
-            value to set, IMPORTANT: make sure you follow the format of the
-            federate value
-        """
-        glom.assign(self.current_fed_setting, tree, val=value)
-        print('Federate value of {} set to {}'.format(
-            tree, value
-        ))
-        with open(self.fed_path, 'w') as f:
-            json.dump(self.current_fed_setting, f, indent=4)
-        pass
-
-    def get_federate_value(self, tree: str) -> Any:
-        """Gets the selected federate value in the tree
-
-        Parameters
-        ----------
-        tree : str
-            dict tree to navigate to the federate value to be changed, i.e.
-            'globalNetwork.uplink.delay.delay'
-
-        Returns
-        -------
-        Any
-            federate value
-        """
-
-        return glom.glom(self.current_fed_setting, tree)
-
-    @property
-    def pprint_curr_fed(self):
-        """Pretty print current federate configuration
-        """
-        print('Current federate: {}'.format(self.fed_name))
-        print(json.dumps(self.current_fed_setting, indent=4, sort_keys=True))
-
-    @property
-    def get_federates(self):
-        """Print available federate configurations
-        """
-        path_to_settings = os.path.join(self.mosaic_path,
-                                        'scenarios',
-                                        self.sim_name)
-        print('Available federates: {}'.format(sorted(
-            [f.name for f in os.scandir(path_to_settings)])))
-
-    @property
-    def get_df_apps(self) -> list:
-        """Getter DataFrame Applications
-
-        Returns
-        -------
-        list
-            DataFrame Applications
-        """
-        app_dir = os.path.join(self.sim_select, 'apps')
-        return sorted([f.name for f in os.scandir(app_dir) if f.is_dir()],
-                      reverse=True)
-
-    @property
-    def get_df_events(self) -> list:
-        """Getter DataFrame Events
-
-        Returns
-        -------
-        list
-            DataFrame Events
-        """
-        return list(self.id2fields.keys())
-
-    def get_df_labels(self, event: str) -> list:
-        """Getter DataFrame Fields
-
-        Parameters
-        ----------
-        event : str
-            Event type
-
-        Returns
-        -------
-        list
-            DataFrame Fields
-        """
-        return self.id2fields[event]
-
-    @property
-    def get_output_df(self) -> pd.DataFrame:
-        """Getter output DataFrame
-
-        Returns
-        -------
-        pd.DataFrame
-            output DataFrame
-        """
-        return self.output_df
-
-    """
-    def plotter(self) -> None:
-        path_net = os.path.join(self.mosaic_path,
-                                'scenarios',
-                                self.sim_name,
-                                'sumo',
-                                self.sim_name + '.net.xml')
-
-        net = sumolib.net.readNet(path_net)
-        x_off, y_off = net.getLocationOffset()
-
-        p = pyproj.Proj(proj='utm',
-                        zone=33,
-                        ellps='WGS84',
-                        preserve_units=False)
-
-        fig = plt.figure()
-        ax = fig.add_subplot(1, 1, 1)
-        shapes = [elem.getShape() for elem in net._edges]
-
-        shapes_geo = []
-
-        for shape in shapes:
-            foo = [(p(el[0] - x_off, el[1] - y_off,
-                      inverse=True)) for el in shape]
-            shapes_geo.append(foo)
-
-        line_segments = LineCollection(shapes_geo, colors='k', alpha=0.5)
-        ax.add_collection(line_segments)
-        ax.set_xmargin(0.1)
-        ax.set_ymargin(0.1)
-        ax.autoscale_view(True, True, True)
-        ax.set_ylim([52.60, 52.653])
-        ax.set_xlim([13.51, 13.57])
-
-        # Add RSUs
-        rsu_0 = self.filter_df(Event='RSU_REGISTRATION',
-                               MappingName='rsu_0',
-                               select='all')
-
-        ax.scatter(rsu_0.MappingPositionLongitude.astype(float),
-                   rsu_0.MappingPositionLatitude.astype(float),
-                   c='g', linewidths=20, marker="1", label='Road Side Unit')
-
-        # Get road conditions
-        self.retrieve_federate('environment', idx=0)
-        spec = ('events', ['location.area.a'])
-        envpts_a = sorted(list(self.get_federate_value(spec)[0].values()))
-        spec = ('events', ['location.area.b'])
-        envpts_b = sorted(list(self.get_federate_value(spec)[0].values()))
-
-        lon = (envpts_a[0], envpts_b[0])
-        lat = (envpts_a[1], envpts_b[1])
-
-        rect = Rectangle((min(lon), min(lat)),
-                         max(lon)-min(lon),
-                         max(lat) - min(lat),
-                         linewidth=5, edgecolor='c',
-                         facecolor='none', label='Hazardous Road')
-
-        ax.add_patch(rect)
-    """
-
-    def eval_simulation(self) -> list:
-        """Evaluate simulation
+    def import_data(self) -> list:
+        """Import and parse the data from the output.csv file
 
         Returns
         -------
@@ -402,97 +211,97 @@ class Mosaic:
             co2 emissions]
 
         """
-        c = [13.54995, 52.63254, 0.01]  # x, y, r
+        df_navigation_log = self._get_log_file('/Navigation.log')
+        df_traffic_log = self._get_log_file('/Traffic.log')
+        
+        
+        # filter dataframe to only include rows with 'VEHICLE_UPDATES'
+        df_vehicle_updates = self.filter_df(Event='VEHICLE_UPDATES',
+                            select=['VehicleEmissionsCurrentEmissionsCo2',
+                                    'VehicleEmissionsAllEmissionsCo2',
+                                    'Name',
+                                    'RouteId',
+                                    'RoadPositionLaneIndex'])
+        # filter dataframe to only include rows with 'V2X_MESSAGE_TRANSMISSION'   
+        df_v2x_message_transmission = self.filter_df(Event='V2X_MESSAGE_TRANSMISSION',
+                            select=['Type', 'MessageId','SourceName','MessageRoutingDestinationType'])
+        # filter dataframe to only include rows with 'V2X_MESSAGE_RECEPTION'   
+        df_v2x_message_reception = self.filter_df(Event='V2X_MESSAGE_RECEPTION',
+                            select=['Type', 'MessageId','ReceiverName','ReceiverInformationReceiveSignalStrength'])
+        # filter dataframe to only include rows with 'CELL_CONFIGURATION'   
+        df_cell_configuration = self.filter_df(Event='CELL_CONFIGURATION',
+                           select=['ConfigurationNodeId'])
+        # filter dataframe to only include rows with 'ADHOC_CONFIGURATION'   
+        df_adhoc_configuration = self.filter_df(Event='ADHOC_CONFIGURATION',
+                           select=['ConfigurationNodeId'])
+        # filter dataframe to only include rows with 'VEHICLE_REGISTRATION'   
+        df_vehicle_registration = self.filter_df(Event='VEHICLE_REGISTRATION',
+                           select=['MappingGroup', 'MappingName','MappingVehicleTypeVehicleClass'])   
 
-        df = self.filter_df(Event='VEHICLE_UPDATES',
-                            select=['PositionLongitude',
-                                    'PositionLatitude',
-                                    'Name'])
-
-        veh_total = len(set(df.Name))
-
-        gps_obs = np.concatenate(
-            (np.asfarray(df.PositionLongitude).reshape(-1, 1),
-             np.asfarray(df.PositionLatitude).reshape(-1, 1)), axis=1)
-
-        veh_in_circle = list()
-
-        for idx, val in enumerate(gps_obs):
-            foo = self._in_circle(val, c)
-            if foo is True:
-                veh_in_circle.append(df.Name.iloc[idx])
-            else:
-                pass
-
-        set_v2r = set(veh_in_circle)
-        veh2alt = len(set_v2r)
-        veh2std = veh_total - veh2alt
-
-        # CO2 Emissions
-        df = self.filter_df(Event='VEHICLE_UPDATES',
-                            select=['Name', 'VehicleEmissionsAllEmissionsCo2'])
-        co2_per_car = df[["Name", "VehicleEmissionsAllEmissionsCo2"]].groupby("Name").max()
-        co2_mean = co2_per_car.mean()[0] / 1000
-
-        print("{} vehicles took the standard route".format(veh2std))
-        print("{} vehicles took the alternate route".format(veh2alt))
-        print("On average a vehicle released {:.2f} g CO2".format(co2_mean))
-
-        return veh2std, veh2alt, co2_mean
-
-    def _in_circle(self, p, c):
-        xp, yp = p[0], p[1]
-        xc, yc, r = c
-
-        d = np.sqrt((xp-xc)**2 + (yp-yc)**2)
-
-        if r > d:  # Point is in circle
-            return True
+        self.df_vehicle_updates = df_vehicle_updates
+        self.df_v2x_message_transmission = df_v2x_message_transmission
+        self.df_v2x_message_reception = df_v2x_message_reception
+        self.df_cell_configuration = df_cell_configuration
+        self.df_adhoc_configuration = df_adhoc_configuration
+        self.df_vehicle_registration = df_vehicle_registration
+        self.df_navigation_log = df_navigation_log
+        self.df_traffic_log = df_traffic_log
+        print(f"The latest simulation results are already imported! Shape: {self.df_vehicle_updates.shape}")
+    
+    def evaluate_results(self) -> pd.DataFrame:
+        self.df_vehicle_registration.rename(columns={'MappingName':'Name'}, inplace=True)
+        self.cumulative_df = pd.merge(self.df_vehicle_updates, self.df_vehicle_registration[['Name','MappingGroup']], how='left')
+        self.cumulative_df = pd.merge(self.cumulative_df, self.df_vehicle_registration[['Name','MappingVehicleTypeVehicleClass']], how='left')
+        self.all_vehicles = self.df_vehicle_registration.Name.unique().tolist()
+        self.adhoc_vehicles = self.cumulative_df.loc[self.cumulative_df['MappingGroup']=='AdHoc'].Name.unique().tolist()
+        self.cellular_vehicles = self.cumulative_df.loc[self.cumulative_df['MappingGroup']=='Cellular'].Name.unique().tolist()
+        self.unequipped_vehicles = self.cumulative_df.loc[self.cumulative_df['MappingGroup']=='Unequipped'].Name.unique().tolist()
+        self.vehicles_having_routeId_2 = self.cumulative_df.loc[self.cumulative_df['RouteId']==2.0].Name.unique().tolist()
+        self.cellular_vehicles_having_routeId_2 = self.cumulative_df.loc[(self.cumulative_df['RouteId']==2.0) & (self.cumulative_df['MappingGroup']=='Cellular')].Name.unique().tolist()
+        self.adhoc_vehicles_having_routeId_2 = self.cumulative_df.loc[(self.cumulative_df['RouteId']==2.0) & (self.cumulative_df['MappingGroup']=='AdHoc')].Name.unique().tolist()
+        
+        # Calculate how many vehicles alread got messages from the V2X network
+        self.df_navigation_log
+        self.df_navigation_log['Vehicles_List'] = ''
+        self.df_navigation_log['Vehicles_List'][self.df_navigation_log[12].str.contains('veh_')==True] = self.df_navigation_log[12].str.split('.').str[0]
+        self.df_navigation_log = self.df_navigation_log[self.df_navigation_log['Vehicles_List']!='']
+        self.list_of_vehicles_got_message = self.df_navigation_log['Vehicles_List'].values
+        
+        # Calculate how many vehicles already set the 'targetSpeed=6.94'
+        self.list_of_vehicles_past_through_hazardous_zone = self.df_traffic_log[14].loc[self.df_traffic_log[15].str.contains('targetSpeed=6.94')==True]
+        
+        # Print Info
+        print(f"Total {len(self.all_vehicles)} vehicles in the simulation. (AdHoc: {len(self.adhoc_vehicles)}, Cellular: {len(self.cellular_vehicles)}, Unequipped: {len(self.unequipped_vehicles)})")
+        print(f"\nStatistics from Navigation.log file >>")
+        print(f"Total {len(self.list_of_vehicles_got_message.tolist())} vehicles got messages from the V2X network due to changing route.")
+        print(f"{len(self.adhoc_vehicles_having_routeId_2)} adhoc and {len(self.cellular_vehicles_having_routeId_2)} cellular vehicle(s) updated the route!")
+        print(f"\nStatistics from  Traffic.log file >>")
+        print(f"{len(self.list_of_vehicles_past_through_hazardous_zone)} vehicle(s) passed through the hazardous zone.")
+          
+        # Change column names and group by network types of 'df_v2x_message_transmission'
+        self.df_v2x_message_transmission.rename(columns={'SourceName':'Name','Type':'TransmissionType', 'MessageId':'TransmissionMessageId'}, inplace=True)
+        self.adhoc_transmitter = self.df_v2x_message_transmission.loc[self.df_v2x_message_transmission['MessageRoutingDestinationType']=='AD_HOC_GEOCAST']
+        self.cellular_transmitter = self.df_v2x_message_transmission.loc[self.df_v2x_message_transmission['MessageRoutingDestinationType']=='CELL_GEOCAST']
+        
+        # Change column names and group by network types of 'df_v2x_message_reception'
+        self.df_v2x_message_reception.rename(columns={'ReceiverName':'Name','Type':'ReceiverType', 'MessageId':'ReceiverMessageId'}, inplace=True)
+        self.all_receiver = pd.merge(self.df_v2x_message_reception, self.df_vehicle_registration[['Name','MappingGroup']], how='left')
+        self.adhoc_receiver = self.all_receiver.loc[self.all_receiver['MappingGroup']=='AdHoc']
+        self.cellular_receiver = self.all_receiver.loc[self.all_receiver['MappingGroup']=='Cellular']
+        
+        # print(self.adhoc_transmitter.groupby(['Name']).size())
+        print(f"\n")
+        print(f"{self.adhoc_transmitter.groupby(['Name']).size().sum()} messages transmitted by {self.adhoc_transmitter.groupby(['Name']).size().count()} Adhoc vehicle(s) and {self.adhoc_receiver.groupby(['Name']).size().sum()} messages received by {self.adhoc_receiver.groupby(['Name']).size().count()} Adhoc vehicle(s)")
+        
+        if self.cellular_transmitter.loc[self.cellular_transmitter.Name.str.contains('server')].Name.nunique() > 0:
+            print(f"{self.cellular_transmitter.groupby(['Name']).size().sum()} messages transmitted by {self.cellular_transmitter.Name.nunique() - self.cellular_transmitter.loc[self.cellular_transmitter.Name.str.contains('server')].Name.nunique()} Cellular vehicle(s) and {self.cellular_transmitter.loc[self.cellular_transmitter.Name.str.contains('server')].Name.nunique()} server(s) and {self.cellular_receiver.groupby(['Name']).size().sum()} messages received by {self.cellular_receiver.groupby(['Name']).size().count()} Cellular vehicle(s)")
+            #print(f"{self.cellular_transmitter.Name.nunique() - self.cellular_transmitter.loc[self.cellular_transmitter.Name.str.contains('server')].Name.nunique()}\
+            #vehicles and {self.cellular_transmitter.loc[self.cellular_transmitter.Name.str.contains('server')].Name.nunique()} Server are transmitting Cellular geocast messages")
         else:
-            return False
-
-        '''
-        df = self.filter_df(Event='VEHICLE_UPDATES',
-                            select=['PositionLongitude',
-                                    'PositionLatitude'])
-
-        gps_obs = np.concatenate(
-            (np.asfarray(df.PositionLongitude).reshape(-1, 1),
-             np.asfarray(df.PositionLatitude).reshape(-1, 1)), axis=1)
-
-        _dens_labels = np.array([self._classify(obs) for obs in gps_obs])
-
-        r0 = gps_obs[_dens_labels == -1.].T
-        r1 = gps_obs[_dens_labels == 1.].T
-
-        # weights of road
-        total_pts = gps_obs.size
-        w0 = r0.size / total_pts
-        w1 = r1.size / total_pts
-
-        ax.scatter(r0[0], r0[1], c='r',
-                   linewidths=1,
-                   label='Density = {}'.format(w0),
-                   alpha=w0)
-        ax.scatter(r1[0], r1[1], c='b',
-                   alpha=w1,
-                   linewidths=1,
-                   label='Density = {}'.format(w1))
-        '''
-        # plt.legend(loc='upper left')
-
-    def _classify(self, gps_coord):
-        A = [13.5359800, 52.6128399]
-        B = [13.567001, 52.644249]
-
-        if gps_coord[0] < A[0]:
-            return 0.
-        elif gps_coord[1] > B[1]:
-            return 0.
-        else:
-            position = np.sign((B[0] - A[0])
-                               * (gps_coord[1] - A[1])
-                               - (B[1] - A[1])
-                               * (gps_coord[0] - A[0]))
-
-        return position
+            print(f"{self.cellular_transmitter.groupby(['Name']).size().sum()} messages transmitted by {self.cellular_transmitter.Name.nunique()} Cellular vehicle(s) and {self.cellular_receiver.groupby(['Name']).size().sum()} messages received by {self.cellular_receiver.groupby(['Name']).size().count()} Cellular vehicle(s)")
+                
+        # Statistics of Vehicles Classes and CO2 Emissions
+        print(f"\n")
+        print(f"Vehicle Class(es): {self.cumulative_df['MappingVehicleTypeVehicleClass'].unique()}")
+        print("Total Emmission: {:.2f} g CO2".format(self.cumulative_df['VehicleEmissionsCurrentEmissionsCo2'].sum()/1000))
+        print("Average {:.2f} g CO2 released per vehicle".format(self.cumulative_df[['Name','VehicleEmissionsAllEmissionsCo2']].groupby(['Name']).max().mean()[0]/1000))
