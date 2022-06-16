@@ -7,7 +7,6 @@ from lxml import etree
 
 import numpy as np
 import pandas as pd
-import glom
 import pyproj
 
 from typing import Any
@@ -34,45 +33,28 @@ class Mosaic:
     """
     def __init__(self,
                  mosaic_path: str,
-                 sim_name: str = 'Barnim',
-                 sim_speed: int = 100) -> None:
+                 sim_name: str = 'Barnim') -> None:
         self.sim_name = sim_name
-        self.sim_speed = sim_speed
         self.mosaic_path = mosaic_path
         self.set_simulation_result()
 
-
-
-    def run_simulation(self, visualize=True) -> None:
-        """Run the selected simulation and record logs
-        """
+    def run_simulation(self, visualize=True, sim_speed=None) -> None:
+        """Run the selected simulation and record logs"""
         #print(f'Mosaic path is {self.mosaic_path}')
-        extension = 'mosaic.sh' if os.name == 'posix' else 'mosaic.bat'
+        extension = './mosaic.sh' if os.name == 'posix' else 'mosaic.bat'
         shell = False if os.name == 'posix' else True
         command = [extension, '-s', self.sim_name]
         if visualize:
             command.append('-v')
-        command.append('-b') 
-        command.append(str(self.sim_speed))   
-        print("Running: " + " ".join(command))
-                
-        #print(f'command: {command}')
-        '''
-        try:
-            output =subprocess.check_output(command,
-                                        stderr=subprocess.STDOUT,
-                                        cwd=self.mosaic_path,
-                                        shell=shell)
-        except subprocess.CalledProcessError as e:
-            print("Error", e.output)
-  
-        
-        '''
+        if sim_speed is not None:
+            command.append('-b')
+            command.append(str(sim_speed))
+        print(f"Running: {' '.join(command)}")
+
         output = subprocess.check_output(command,
                                          stderr=subprocess.STDOUT,
                                          cwd=self.mosaic_path,
                                          shell=shell)
-        
         print(output.decode('ascii'))
         self.set_simulation_result()
 
@@ -129,11 +111,6 @@ class Mosaic:
         pd.DataFrame
             Filtered DataFrame
         """
-        '''
-        loop = 1
-        for kw in kwargs: 
-            print(f'{loop}: {kwargs[loop]}')
-        '''
         assert 'Event' in kwargs, 'Must specify an event name'
         assert 'select' in kwargs, 'Either "all" or list of str'
         if kwargs['select'] == 'all':
@@ -261,7 +238,6 @@ class Mosaic:
         self.adhoc_vehicles_having_routeId_2 = self.cumulative_df.loc[(self.cumulative_df['RouteId']==2.0) & (self.cumulative_df['MappingGroup']=='AdHoc')].Name.unique().tolist()
         
         # Calculate how many vehicles alread got messages from the V2X network
-        self.df_navigation_log
         self.df_navigation_log['Vehicles_List'] = ''
         self.df_navigation_log['Vehicles_List'][self.df_navigation_log[12].str.contains('veh_')==True] = self.df_navigation_log[12].str.split('.').str[0]
         self.df_navigation_log = self.df_navigation_log[self.df_navigation_log['Vehicles_List']!='']
