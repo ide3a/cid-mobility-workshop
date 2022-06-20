@@ -6,13 +6,9 @@ MOSAIC requires [Java](https://www.java.com/en/) and [SUMO](https://www.eclipse.
 
 ## Installing Java
 
-Open a terminal on your computer (Linux & Mac: search `terminal`; Windows: search `cmd`*).
-To check if Java is already installed on your computer, type
+Open a terminal on your computer (Linux & Mac: search "terminal"; Windows: search "cmd").
 
-```
-java --version
-```
-
+To check if Java is already installed on your computer, type `java --version`.
 The output should look similar to this:
 
 ```shell
@@ -53,48 +49,46 @@ If you get an error message or something similar, you probably need to install J
   3. Open a new terminal and type `java --version`. It should now be installed.
 </details>
 
-After installation type `java --version` in a new terminal to check whether the installation was successful.
+Check if the installation was successful by typing `java --version` in a new terminal.
 
 
 ## Installing SUMO
 
-### Linux
+<details>
+  <summary>Install on Linux</summary>
+  
+  In the terminal, type in the following commands:
+  
+  ```shell
+  sudo add-apt-repository ppa:sumo/stable
+  sudo apt-get update
+  sudo apt-get install sumo sumo-tools sumo-doc
+  ```
+</details>
 
-In the terminal, type in the following commands:
+<details>
+  <summary>Install on Windows</summary>
+  
+  Download [SUMO](https://sumo.dlr.de/releases/1.9.2/sumo-win64-1.9.2.msi) and install as usual.
+  
+  **IMPORTANT:** Don't forget to set environment variable **SUMO_HOME**:
+  ![Environment variable SUMO_HOME](fig/sumo_ins.png)
+</details>
 
-```shell
-sudo add-apt-repository ppa:sumo/stable
-sudo apt-get update
-sudo apt-get install sumo sumo-tools sumo-doc
-```
+<details>
+  <summary>Install on Mac</summary>
+  
+  For macOS you can follow the [official guide](https://sumo.dlr.de/docs/Installing/index.html#macos).
+  Note, that the XQuartz or sumo-gui dependencies are not required for this workshop.
+  - Install [Homebrew](https://brew.sh/), e.g. via `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"`
+  - Run `brew update`, `brew tap dlr-ts/sumo` and `brew install sumo`
+    - The last command should output a path like `export SUMO_HOME="/opt/homebrew/opt/sumo/share/sumo"`
+  - From macOS Catalina (10.15) run `open .zshrc`, otherwise `open ~/.bashrc` (or whichever shell you are using)
+    - If the above command fails (The file ... does not exist.) first run `touch .zshrc`/`touch .zshrc` and rerun
+  - Enter the command outputted by `brew install sumo` as a new line in this file.
+</details>
 
-Open a new terminal and run `sumo --version` to check if everything works.
-
-### Windows
-
-Download [SUMO](https://sumo.dlr.de/releases/1.9.2/sumo-win64-1.9.2.msi) and install as usual.
-
-**IMPORTANT:** Don't forget to set environment variable **SUMO_HOME**:
-![Environment variable SUMO_HOME](fig/sumo_ins.png)
-
-Open a new terminal and run `sumo --version` to check if everything works.
-
-### macOS
-
-For macOS you can follow the [official guide](https://sumo.dlr.de/docs/Installing/index.html#macos).
-Note, that the XQuartz or sumo-gui dependencies are not required for this workshop.
-
-- Install [Homebrew](https://brew.sh/), e.g. via `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"`
-- Run `brew update`, `brew tap dlr-ts/sumo` and `brew install sumo`
-  - The last command should output a path like `export SUMO_HOME="/opt/homebrew/opt/sumo/share/sumo"`
-- From macOS Catalina (10.15) run `open .zshrc`, otherwise `open ~/.bashrc` (or whichever shell you are using)
-  - If the above command fails (The file ... does not exist.) first run `touch .zshrc`/`touch .zshrc` and rerun
-- Enter the command outputted by `brew install sumo` as a new line in this file.
-
-Open a new terminal and run `sumo --version` to check if everything works.
-
-
-<div style="page-break-after: always;"></div>
+Check if the installation was successful by typing `sumo --version` in a new terminal.
 
 
 ## Installing Python
@@ -102,12 +96,14 @@ Open a new terminal and run `sumo --version` to check if everything works.
 Make sure you have a working installation of Python 3.6 or newer by running `python --version`.
 If you don't, install it using your package manager of choice or the [official website](https://www.python.org/downloads/).
 
+Check if the installation was successful by typing `python --version` in a new terminal.
 
-## Running the Workshop Material
 
-First, download this repository using either `git` or simply clicking `Code` -> `Download ZIP` on the GitHub website.
+# Running the Workshop Material
 
-Within the repository directory, we now  install the Python requirements for running the simulation in a Jupyter notebook:
+Download this repository using either `git` or simply clicking `Code` -> `Download ZIP` on the GitHub website.
+
+Within the repository directory, we now install the requirements for running the simulation in Jupyter lab:
 
 ```
 python3 -m venv venv              # create venv
@@ -115,11 +111,7 @@ python3 -m venv venv              # create venv
 pip3 install -r requirements.txt  # install dependencies
 ```
 
-You can now start Jupyter lab:
-```
-jupyter lab
-```
-
-Which should open a new browser window/tab. Open `mosaic.ipynb` and sequentially run all cells.
+You can now start Jupyter lab by running `jupyter lab`, which should open a new browser window/tab. 
+Open `mosaic.ipynb` and sequentially run all cells.
 
 **Congrats!** If all the notebook cells run without errors, you are ready to attend the practical session!
