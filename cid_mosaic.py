@@ -7,9 +7,6 @@ from xml.etree import ElementTree
 
 import pandas as pd
 
-from typing import Any
-from IPython.display import display, HTML
-
 
 try:
     tools = os.path.join(os.environ['SUMO_HOME'], 'tools')
@@ -18,6 +15,46 @@ try:
 except ImportError:
     sys.exit("Please declare the environment variable 'SUMO_HOME'")
 
+
+class EventLog:
+
+    def __init__(self, df_vehicle_updates, df_v2x_message_transmission, df_v2x_message_reception, df_cell_configuration,
+                 df_adhoc_configuration, df_vehicle_registration, df_traffic_log, df_navigation_log):
+        """Simulation result.
+
+        Args:
+            df_vehicle_updates: VEHICLE_UPDATES events
+            df_v2x_message_transmission: V2X_MESSAGE_TRANSMISSION events
+            df_v2x_message_reception: V2X_MESSAGE_RECEPTION events
+            df_cell_configuration: CELL_CONFIGURATION events
+            df_adhoc_configuration: ADHOC_CONFIGURATION events
+            df_vehicle_registration: VEHICLE_REGISTRATION events
+            df_traffic_log: Contents of `Traffic.log` file
+            df_navigation_log: Contents of `Navigation.log` file
+        """
+        self.df_vehicle_updates = df_vehicle_updates
+        self.df_v2x_message_transmission = df_v2x_message_transmission
+        self.df_v2x_message_reception = df_v2x_message_reception
+        self.df_cell_configuration = df_cell_configuration
+        self.df_adhoc_configuration = df_adhoc_configuration
+        self.df_vehicle_registration = df_vehicle_registration
+        self.df_traffic_log = df_traffic_log
+        self.df_navigation_log = df_navigation_log
+
+        # Calculate how many vehicles already got messages from the V2X network
+        self.df_navigation_log['Vehicles_List'] = ''
+        self.df_navigation_log['Vehicles_List'][self.df_navigation_log[12].str.contains('veh_') == True] = \
+            self.df_navigation_log[12].str.split('.').str[0]
+        self.df_navigation_log = self.df_navigation_log[self.df_navigation_log['Vehicles_List'] != '']
+
+        # Change column names and group by network types of 'df_v2x_message_transmission'
+        self.df_v2x_message_transmission.rename(
+            columns={'SourceName': 'Name', 'Type': 'TransmissionType', 'MessageId': 'TransmissionMessageId'},
+            inplace=True)
+
+        # Change column names and group by network types of 'df_v2x_message_reception'
+        self.df_v2x_message_reception.rename(
+            columns={'ReceiverName': 'Name', 'Type': 'ReceiverType', 'MessageId': 'ReceiverMessageId'}, inplace=True)
 
 class Mosaic:
     """Initialize the Mosaic toolbox
@@ -174,21 +211,11 @@ class Mosaic:
         tree = ElementTree.parse(xml_path)
         return tree.getroot()
 
-    def import_data(self) -> list:
-        """Import and parse the data from the output.csv file
-
-        Returns
-        -------
-        list
-            [num vehicles standard route,
-            num vehicles alternate route,
-            co2 emissions]
-
-        """
+    def import_data(self) -> EventLog:
+        """Import and parse the data from the output files"""
         df_navigation_log = self._get_log_file('/Navigation.log')
         df_traffic_log = self._get_log_file('/Traffic.log')
-        
-        
+
         # filter dataframe to only include rows with 'VEHICLE_UPDATES'
         df_vehicle_updates = self.filter_df(Event='VEHICLE_UPDATES',
                             select=['VehicleEmissionsCurrentEmissionsCo2',
@@ -198,83 +225,20 @@ class Mosaic:
                                     'RoadPositionLaneIndex'])
         # filter dataframe to only include rows with 'V2X_MESSAGE_TRANSMISSION'   
         df_v2x_message_transmission = self.filter_df(Event='V2X_MESSAGE_TRANSMISSION',
-                            select=['Type', 'MessageId','SourceName','MessageRoutingDestinationType'])
+                                                     select=['Type', 'MessageId','SourceName','MessageRoutingDestinationType'])
         # filter dataframe to only include rows with 'V2X_MESSAGE_RECEPTION'   
         df_v2x_message_reception = self.filter_df(Event='V2X_MESSAGE_RECEPTION',
-                            select=['Type', 'MessageId','ReceiverName','ReceiverInformationReceiveSignalStrength'])
+                                                  select=['Type', 'MessageId','ReceiverName','ReceiverInformationReceiveSignalStrength'])
         # filter dataframe to only include rows with 'CELL_CONFIGURATION'   
         df_cell_configuration = self.filter_df(Event='CELL_CONFIGURATION',
-                           select=['ConfigurationNodeId'])
+                                               select=['ConfigurationNodeId'])
         # filter dataframe to only include rows with 'ADHOC_CONFIGURATION'   
         df_adhoc_configuration = self.filter_df(Event='ADHOC_CONFIGURATION',
-                           select=['ConfigurationNodeId'])
+                                                select=['ConfigurationNodeId'])
         # filter dataframe to only include rows with 'VEHICLE_REGISTRATION'   
         df_vehicle_registration = self.filter_df(Event='VEHICLE_REGISTRATION',
-                           select=['MappingGroup', 'MappingName','MappingVehicleTypeVehicleClass'])   
+                                                 select=['MappingGroup', 'MappingName', 'MappingVehicleTypeVehicleClass']
+                                                 ).rename(columns={'MappingName': 'Name'})
 
-        self.df_vehicle_updates = df_vehicle_updates
-        self.df_v2x_message_transmission = df_v2x_message_transmission
-        self.df_v2x_message_reception = df_v2x_message_reception
-        self.df_cell_configuration = df_cell_configuration
-        self.df_adhoc_configuration = df_adhoc_configuration
-        self.df_vehicle_registration = df_vehicle_registration
-        self.df_navigation_log = df_navigation_log
-        self.df_traffic_log = df_traffic_log
-        print(f"The latest simulation results are already imported! Shape: {self.df_vehicle_updates.shape}")
-    
-    def evaluate_results(self) -> pd.DataFrame:
-        self.df_vehicle_registration.rename(columns={'MappingName':'Name'}, inplace=True)
-        self.cumulative_df = pd.merge(self.df_vehicle_updates, self.df_vehicle_registration[['Name','MappingGroup']], how='left')
-        self.cumulative_df = pd.merge(self.cumulative_df, self.df_vehicle_registration[['Name','MappingVehicleTypeVehicleClass']], how='left')
-        self.all_vehicles = self.df_vehicle_registration.Name.unique().tolist()
-        self.adhoc_vehicles = self.cumulative_df.loc[self.cumulative_df['MappingGroup']=='AdHoc'].Name.unique().tolist()
-        self.cellular_vehicles = self.cumulative_df.loc[self.cumulative_df['MappingGroup']=='Cellular'].Name.unique().tolist()
-        self.unequipped_vehicles = self.cumulative_df.loc[self.cumulative_df['MappingGroup']=='Unequipped'].Name.unique().tolist()
-        self.vehicles_having_routeId_2 = self.cumulative_df.loc[self.cumulative_df['RouteId']==2.0].Name.unique().tolist()
-        self.cellular_vehicles_having_routeId_2 = self.cumulative_df.loc[(self.cumulative_df['RouteId']==2.0) & (self.cumulative_df['MappingGroup']=='Cellular')].Name.unique().tolist()
-        self.adhoc_vehicles_having_routeId_2 = self.cumulative_df.loc[(self.cumulative_df['RouteId']==2.0) & (self.cumulative_df['MappingGroup']=='AdHoc')].Name.unique().tolist()
-        
-        # Calculate how many vehicles alread got messages from the V2X network
-        self.df_navigation_log['Vehicles_List'] = ''
-        self.df_navigation_log['Vehicles_List'][self.df_navigation_log[12].str.contains('veh_')==True] = self.df_navigation_log[12].str.split('.').str[0]
-        self.df_navigation_log = self.df_navigation_log[self.df_navigation_log['Vehicles_List']!='']
-        self.list_of_vehicles_got_message = self.df_navigation_log['Vehicles_List'].values
-        
-        # Calculate how many vehicles already set the 'targetSpeed=6.94'
-        self.list_of_vehicles_past_through_hazardous_zone = self.df_traffic_log[14].loc[self.df_traffic_log[15].str.contains('targetSpeed=6.94')==True]
-        
-        # Print Info
-        print(f"Total {len(self.all_vehicles)} vehicles in the simulation. (AdHoc: {len(self.adhoc_vehicles)}, Cellular: {len(self.cellular_vehicles)}, Unequipped: {len(self.unequipped_vehicles)})")
-        print(f"\nStatistics from Navigation.log file >>")
-        print(f"Total {len(self.list_of_vehicles_got_message.tolist())} vehicles got messages from the V2X network due to changing route.")
-        print(f"{len(self.adhoc_vehicles_having_routeId_2)} adhoc and {len(self.cellular_vehicles_having_routeId_2)} cellular vehicle(s) updated the route!")
-        print(f"\nStatistics from  Traffic.log file >>")
-        print(f"{len(self.list_of_vehicles_past_through_hazardous_zone)} vehicle(s) passed through the hazardous zone.")
-          
-        # Change column names and group by network types of 'df_v2x_message_transmission'
-        self.df_v2x_message_transmission.rename(columns={'SourceName':'Name','Type':'TransmissionType', 'MessageId':'TransmissionMessageId'}, inplace=True)
-        self.adhoc_transmitter = self.df_v2x_message_transmission.loc[self.df_v2x_message_transmission['MessageRoutingDestinationType']=='AD_HOC_GEOCAST']
-        self.cellular_transmitter = self.df_v2x_message_transmission.loc[self.df_v2x_message_transmission['MessageRoutingDestinationType']=='CELL_GEOCAST']
-        
-        # Change column names and group by network types of 'df_v2x_message_reception'
-        self.df_v2x_message_reception.rename(columns={'ReceiverName':'Name','Type':'ReceiverType', 'MessageId':'ReceiverMessageId'}, inplace=True)
-        self.all_receiver = pd.merge(self.df_v2x_message_reception, self.df_vehicle_registration[['Name','MappingGroup']], how='left')
-        self.adhoc_receiver = self.all_receiver.loc[self.all_receiver['MappingGroup']=='AdHoc']
-        self.cellular_receiver = self.all_receiver.loc[self.all_receiver['MappingGroup']=='Cellular']
-        
-        # print(self.adhoc_transmitter.groupby(['Name']).size())
-        print(f"\n")
-        print(f"{self.adhoc_transmitter.groupby(['Name']).size().sum()} messages transmitted by {self.adhoc_transmitter.groupby(['Name']).size().count()} Adhoc vehicle(s) and {self.adhoc_receiver.groupby(['Name']).size().sum()} messages received by {self.adhoc_receiver.groupby(['Name']).size().count()} Adhoc vehicle(s)")
-        
-        if self.cellular_transmitter.loc[self.cellular_transmitter.Name.str.contains('server')].Name.nunique() > 0:
-            print(f"{self.cellular_transmitter.groupby(['Name']).size().sum()} messages transmitted by {self.cellular_transmitter.Name.nunique() - self.cellular_transmitter.loc[self.cellular_transmitter.Name.str.contains('server')].Name.nunique()} Cellular vehicle(s) and {self.cellular_transmitter.loc[self.cellular_transmitter.Name.str.contains('server')].Name.nunique()} server(s) and {self.cellular_receiver.groupby(['Name']).size().sum()} messages received by {self.cellular_receiver.groupby(['Name']).size().count()} Cellular vehicle(s)")
-            #print(f"{self.cellular_transmitter.Name.nunique() - self.cellular_transmitter.loc[self.cellular_transmitter.Name.str.contains('server')].Name.nunique()}\
-            #vehicles and {self.cellular_transmitter.loc[self.cellular_transmitter.Name.str.contains('server')].Name.nunique()} Server are transmitting Cellular geocast messages")
-        else:
-            print(f"{self.cellular_transmitter.groupby(['Name']).size().sum()} messages transmitted by {self.cellular_transmitter.Name.nunique()} Cellular vehicle(s) and {self.cellular_receiver.groupby(['Name']).size().sum()} messages received by {self.cellular_receiver.groupby(['Name']).size().count()} Cellular vehicle(s)")
-                
-        # Statistics of Vehicles Classes and CO2 Emissions
-        print(f"\n")
-        print(f"Vehicle Class(es): {self.cumulative_df['MappingVehicleTypeVehicleClass'].unique()}")
-        print("Total Emmission: {:.2f} g CO2".format(self.cumulative_df['VehicleEmissionsCurrentEmissionsCo2'].sum()/1000))
-        print("Average {:.2f} g CO2 released per vehicle".format(self.cumulative_df[['Name','VehicleEmissionsAllEmissionsCo2']].groupby(['Name']).max().mean()[0]/1000))
+        return EventLog(df_vehicle_updates, df_v2x_message_transmission, df_v2x_message_reception, df_cell_configuration,
+                        df_adhoc_configuration, df_vehicle_registration, df_traffic_log, df_navigation_log)
