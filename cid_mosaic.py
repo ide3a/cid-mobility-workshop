@@ -3,7 +3,7 @@ import sys
 import os
 import re
 import json
-from lxml import etree
+from xml import etree
 
 import numpy as np
 import pandas as pd

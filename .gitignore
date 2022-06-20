@@ -3,4 +3,5 @@ __pycache__
 .idea
 .ipynb_checkpoints
 
-view/eclipse-mosaic-22.0/logs
+eclipse-mosaic-22.0/logs
+venv
