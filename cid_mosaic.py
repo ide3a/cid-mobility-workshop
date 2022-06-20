@@ -3,11 +3,9 @@ import sys
 import os
 import re
 import json
-from xml import etree
+from xml.etree import ElementTree
 
-import numpy as np
 import pandas as pd
-import pyproj
 
 from typing import Any
 from IPython.display import display, HTML
@@ -40,7 +38,6 @@ class Mosaic:
 
     def run_simulation(self, visualize=True, sim_speed=None) -> None:
         """Run the selected simulation and record logs"""
-        #print(f'Mosaic path is {self.mosaic_path}')
         extension = './mosaic.sh' if os.name == 'posix' else 'mosaic.bat'
         shell = False if os.name == 'posix' else True
         command = [extension, '-s', self.sim_name]
@@ -174,7 +171,7 @@ class Mosaic:
                                 'output',
                                 'output_config.xml')
 
-        tree = etree.parse(xml_path)
+        tree = ElementTree.parse(xml_path)
         return tree.getroot()
 
     def import_data(self) -> list:

@@ -7,6 +7,3 @@ pandas
 matplotlib
 seaborn
 plotly
-
-# old requirements
-lxml
