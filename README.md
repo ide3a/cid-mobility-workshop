@@ -105,7 +105,9 @@ If you don't, install it using your package manager of choice or the [official w
 
 ## Running the Workshop Material
 
-To install the Python requirements for running the simulation in a Jupyter notebook, run:
+First, download this repository using either `git` or simply clicking `Code` -> `Download ZIP` on the GitHub website.
+
+Within the repository directory, we now  install the Python requirements for running the simulation in a Jupyter notebook:
 
 ```
 python3 -m venv venv              # create venv
@@ -120,4 +122,4 @@ jupyter lab
 
 Which should open a new browser window/tab. Open `mosaic.ipynb` and sequentially run all cells.
 
-**Congrats!** If all the notebook cells run without errors, you are done for today and ready to attend the second session!
+**Congrats!** If all the notebook cells run without errors, you are ready to attend the practical session!
