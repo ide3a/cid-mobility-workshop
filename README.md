@@ -23,28 +23,34 @@ OpenJDK 64-Bit Server VM Homebrew (build 18.0.1+0, mixed mode, sharing)
 
 If you get an error message or something similar, you probably need to install Java JDK:
 
-<details><summary>Install on Linux</summary>
-1. Download the [latest LTS release](https://adoptium.net/)
-2. Create a new directory in your home-folder called **adoptopenjdk**
-3. Copy/move the tarball from your download folder to **adoptopenjdk** and open a terminal in this folder
-4. Extract the tarball using `tar xzf OpenJDK17U-jdk_x64_linux_hotspot_17.0.3_7.tar.gz`
-5. The tarball should extract the following folder: **jdk-17.0.3+7**.
-6. Open a new terminal and type in the following commands: First `cd` and then `gedit .bashrc`.
-7. Insert the following line at the end: `export PATH=/home/<USERNAME>/adoptopenjdk/jdk-17.0.3+7/bin:$PATH`, save and exit. You can get your USERNAME using the command `whoami` in a terminal. 
+<details>
+  <summary>Install on Linux</summary>
+
+  1. Download the [latest LTS release](https://adoptium.net/)
+  2. Create a new directory in your home-folder called **adoptopenjdk**
+  3. Copy/move the tarball from your download folder to **adoptopenjdk** and open a terminal in this folder
+  4. Extract the tarball using `tar xzf OpenJDK17U-jdk_x64_linux_hotspot_17.0.3_7.tar.gz`
+  5. The tarball should extract the following folder: **jdk-17.0.3+7**.
+  6. Open a new terminal and type in the following commands: First `cd` and then `gedit .bashrc`.
+  7. Insert the following line at the end: `export PATH=/home/<USERNAME>/adoptopenjdk/jdk-17.0.3+7/bin:$PATH`, save and exit. You can get your USERNAME using the command `whoami` in a terminal. 
 </details>
 
-<details><summary>Install on Windows</summary>
-1. Download the [latest LTS release](https://adoptium.net/)
-2. Double click and run as administrator
-3. **IMPORANT:** You need to set the environment variable **JAVA_HOME**. See next Figure:
+<details>
+  <summary>Install on Windows</summary>
 
-![How to set environment variable JAVA_HOME](fig/java_in3.png)
+  1. Download the [latest LTS release](https://adoptium.net/)
+  2. Double click and run as administrator
+  3. **IMPORANT:** You need to set the environment variable **JAVA_HOME**. See next Figure:
+  
+  ![How to set environment variable JAVA_HOME](fig/java_in3.png)
 </details>
 
-<details><summary>Install on Mac</summary>
-1. Download the [latest LTS release](https://adoptium.net/)
-2. Install the `.pkg` file just like any other application
-3. Open a new terminal and type `java --version`. It should now be installed.
+<details>
+  <summary>Install on Mac</summary>
+
+  1. Download the [latest LTS release](https://adoptium.net/)
+  2. Install the `.pkg` file just like any other application
+  3. Open a new terminal and type `java --version`. It should now be installed.
 </details>
 
 After installation type `java --version` in a new terminal to check whether the installation was successful.
