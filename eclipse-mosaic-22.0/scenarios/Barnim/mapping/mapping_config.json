@@ -35,8 +35,8 @@
     "vehicles": [
         {
             "startingTime": 5.0,
-            "targetFlow": 1800,
-            "maxNumberVehicles": 200,
+            "targetFlow": 1000,
+            "maxNumberVehicles": 100,
             "pos": 1417,
             "route": "1",
             "lanes": [ 0, 1 ],
@@ -45,19 +45,19 @@
                     "applications": [ "org.eclipse.mosaic.app.tutorial.WeatherWarningAppCell", "org.eclipse.mosaic.app.tutorial.SlowDownApp" ],
                     "name": "Car",
                     "group": "Cellular",
-                    "weight": 0.3
+                    "weight": 0.1
                 },
                 {
                     "applications": [ "org.eclipse.mosaic.app.tutorial.WeatherWarningApp", "org.eclipse.mosaic.app.tutorial.SlowDownApp" ],
                     "name": "Car",
                     "group": "AdHoc",
-                    "weight": 0.5
+                    "weight": 0.1
                 },
                 {
                     "applications": [ "org.eclipse.mosaic.app.tutorial.SlowDownApp" ],
                     "name": "Car",
                     "group": "Unequipped",
-                    "weight": 0.2
+                    "weight": 0.8
                 }
             ]
         }
