@@ -110,7 +110,10 @@ python3 -m venv venv              # create venv
 . venv/bin/activate               # activate venv
 pip3 install -r requirements.txt  # install dependencies
 ```
-
+For Windows:
+```
+.\venv\Scripts\activate           # activate venv
+```
 You can now start Jupyter lab by running `jupyter lab`, which should open a new browser window/tab. 
 Open `mosaic.ipynb` and sequentially run all cells.
 
